@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+Obsidian_Transfer_venv/
+
+# Local runtime artifacts
+logs/
+clean_app_preview.png
+
+# Upstream/local archives
+notebooklm-mcp-cli/
+github_archive/
+
+# Sync output and local state
+NotebookLM/
+.sync_state.json
+
+# Local metadata
+.agents/
+
+# Build outputs
+mac_app_build/NotebookSyncApp
+mac_app_build/generate_icon
+
+# Optional local editor files
+.vscode/
+.idea/
