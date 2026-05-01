@@ -58,3 +58,14 @@ cd "/Users/david_chen/Desktop/MCP_Hub/Obsidian Transfer"
 
 - This project syncs into your Obsidian vault path; it does not upload your notes to cloud services.
 - If your Mac is asleep, sync waits until wake and next trigger interval.
+
+## If macOS says the app is damaged
+
+If you downloaded an older build, use the latest Release.  
+If macOS still blocks launch, run:
+
+```bash
+xattr -dr com.apple.quarantine "/Applications/NotebookLM Obsidian Sync.app"
+codesign --force --deep --sign - "/Applications/NotebookLM Obsidian Sync.app"
+open "/Applications/NotebookLM Obsidian Sync.app"
+```

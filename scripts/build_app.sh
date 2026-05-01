@@ -11,4 +11,9 @@ cp -f "${ROOT_DIR}/mac_app_build/NotebookSyncApp" "${APP_DIR}/Contents/MacOS/Not
 chmod +x "${APP_DIR}/Contents/MacOS/NotebookSyncApp"
 cp -f "${ROOT_DIR}/mac_app_build/AppIcon.icns" "${APP_DIR}/Contents/Resources/AppIcon.icns"
 
+# Re-sign the full app bundle so Gatekeeper does not treat it as damaged.
+rm -rf "${APP_DIR}/Contents/_CodeSignature"
+codesign --force --deep --sign - "${APP_DIR}"
+codesign --verify --deep --strict --verbose=2 "${APP_DIR}"
+
 echo "[OK] App rebuilt at: ${APP_DIR}"
