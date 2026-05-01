@@ -6,6 +6,8 @@
 ![Status](https://img.shields.io/badge/status-minimal%20one--click-success)
 
 A minimal, one-click sync app from NotebookLM to Obsidian.
+![NotebookLM-to-Obisidian App Preview](assets/app-preview.png)
+
 
 ## What it does
 
