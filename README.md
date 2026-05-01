@@ -1,5 +1,10 @@
 # NotebookLM-to-Obisidian
 
+[![Release](https://img.shields.io/github/v/release/Fly-Carrot/NotebookLM-to-Obisidian)](https://github.com/Fly-Carrot/NotebookLM-to-Obisidian/releases)
+![Platform](https://img.shields.io/badge/platform-macOS-blue)
+![Python](https://img.shields.io/badge/python-3.10%2B-brightgreen)
+![Status](https://img.shields.io/badge/status-minimal%20one--click-success)
+
 A minimal, one-click sync app from NotebookLM to Obsidian.
 
 ## What it does

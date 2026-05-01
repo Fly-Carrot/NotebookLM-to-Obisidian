@@ -12,6 +12,7 @@ Obsidian_Transfer_venv/
 # Local runtime artifacts
 logs/
 clean_app_preview.png
+NotebookLM-Obsidian-Sync-macOS.zip
 
 # Upstream/local archives
 notebooklm-mcp-cli/
@@ -27,6 +28,10 @@ NotebookLM/
 # Build outputs
 mac_app_build/NotebookSyncApp
 mac_app_build/generate_icon
+mac_app_build/AppIcon.iconset/
+mac_app_build/__icon_extract/
+Launchers/NotebookLM Obsidian Sync.app/Contents/MacOS/
+Launchers/NotebookLM Obsidian Sync.app/Contents/_CodeSignature/
 
 # Optional local editor files
 .vscode/
