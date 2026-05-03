@@ -13,7 +13,6 @@ A minimal, one-click sync app from NotebookLM to Obsidian.
 
 - Menu bar app with 4 buttons: `Login`, `Set Path`, `Sync`, `Quit`
 - Progress bar and status line
-- Daily local auto-sync via `launchd` (22:00 Asia/Shanghai)
 - Markdown cleanup for better readability
 - Optional full overwrite strategy for changed notebooks
 
