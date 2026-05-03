@@ -1,5 +1,7 @@
 # NotebookLM-to-Obisidian
 
+![NotebookLM-to-Obisidian App Icon](assets/app-icon.png)
+
 [![Release](https://img.shields.io/github/v/release/Fly-Carrot/NotebookLM-to-Obisidian)](https://github.com/Fly-Carrot/NotebookLM-to-Obisidian/releases)
 ![Platform](https://img.shields.io/badge/platform-macOS-blue)
 ![Python](https://img.shields.io/badge/python-3.10%2B-brightgreen)
