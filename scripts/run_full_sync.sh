@@ -8,7 +8,7 @@ PYTHON_BIN="${ROOT_DIR}/Obsidian_Transfer_venv/bin/python"
 
 VAULT_ROOT=""
 DRY_RUN=false
-BUNDLE_DIR="Knowledge Export"
+BUNDLE_DIR="N2O Export"
 ARGS=()
 
 while [[ $# -gt 0 ]]; do

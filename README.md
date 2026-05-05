@@ -19,8 +19,8 @@ A minimal, one-click sync app from NotebookLM to Obsidian.
 - `Sync` runs a full pipeline: NotebookLM sync + Antigravity chat export
 - Optional full overwrite strategy for changed notebooks
 - Unified export layout under one parent folder:
-  - `Knowledge Export/NotebookLM`
-  - `Knowledge Export/Antigravity`
+  - `N2O Export/NotebookLM`
+  - `N2O Export/Antigravity`
 
 ## Project structure
 
