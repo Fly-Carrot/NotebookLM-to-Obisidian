@@ -4,6 +4,7 @@ import AppKit
 final class SyncController: ObservableObject {
     @Published var status: String = "Ready"
     @Published var isRunning: Bool = false
+    @Published var isExportingChats: Bool = false
     @Published var progressCurrent: Double = 0
     @Published var progressTotal: Double = 1
     @Published var exportPath: String
@@ -11,6 +12,7 @@ final class SyncController: ObservableObject {
 
     private let projectRoot: String
     private let scriptPath: String
+    private let exportScriptPath: String
     private let pythonPath: String
     private let userDefaultsKey = "n2o_export_path"
 
@@ -31,6 +33,7 @@ final class SyncController: ObservableObject {
             projectRoot = defaultProjectRoot
         }
         scriptPath = "\(projectRoot)/run_sync.sh"
+        exportScriptPath = "\(projectRoot)/scripts/export_antigravity_chats.py"
         pythonPath = "\(projectRoot)/Obsidian_Transfer_venv/bin/python"
 
         let defaultPath = "/Users/david_chen/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Memory"
@@ -44,7 +47,7 @@ final class SyncController: ObservableObject {
     }
 
     var menuBarTitle: String {
-        if isRunning {
+        if isRunning || isExportingChats {
             return "N₂O \(Int(progressValue * 100))%"
         }
         return "N₂O"
@@ -81,6 +84,10 @@ final class SyncController: ObservableObject {
         }
         if !fm.isExecutableFile(atPath: scriptPath) {
             status = "Sync script not found"
+            return false
+        }
+        if !fm.isExecutableFile(atPath: exportScriptPath) {
+            status = "Export script not found"
             return false
         }
         return true
@@ -199,8 +206,9 @@ final class SyncController: ObservableObject {
                 }
             }
         }
-        status = "Sync stopped"
+        status = isExportingChats ? "Chat export stopped" : "Sync stopped"
         isRunning = false
+        isExportingChats = false
     }
 
     func quitApp() {
@@ -221,7 +229,8 @@ final class SyncController: ObservableObject {
 
     private func parseOutputLine(_ line: String) {
         if line.hasPrefix("[INFO] Found") {
-            // [INFO] Found 14 notebooks, syncing 14.
+            // Sync format: [INFO] Found 14 notebooks, syncing 14.
+            // Export format: [INFO] Found 42 Antigravity markdown files.
             if let r = line.range(of: "syncing ") {
                 let tail = line[r.upperBound...]
                 let num = tail.prefix { $0.isNumber }
@@ -231,11 +240,24 @@ final class SyncController: ObservableObject {
                         self.progressCurrent = 0
                         self.status = "Syncing..."
                     }
+                }
+                return
+            }
+
+            if let m = line.range(of: "Found ") {
+                let tail = line[m.upperBound...]
+                let num = tail.prefix { $0.isNumber }
+                if let total = Double(num), total > 0 {
+                    DispatchQueue.main.async {
+                        self.progressTotal = total
+                        self.progressCurrent = 0
+                        self.status = self.isExportingChats ? "Exporting chats..." : "Syncing..."
+                    }
                 } else {
                     DispatchQueue.main.async {
                         self.progressTotal = 1
                         self.progressCurrent = 1
-                        self.status = "No notebooks to sync"
+                        self.status = self.isExportingChats ? "No chats to export" : "No notebooks to sync"
                     }
                 }
             }
@@ -315,6 +337,7 @@ final class SyncController: ObservableObject {
                 pipe.fileHandleForReading.readabilityHandler = nil
                 self.process = nil
                 self.isRunning = false
+                self.isExportingChats = false
                 if self.userStoppedSync {
                     self.userStoppedSync = false
                     self.status = "Sync stopped"
@@ -330,6 +353,88 @@ final class SyncController: ObservableObject {
         } catch {
             isRunning = false
             status = "Failed to start"
+        }
+    }
+
+    func exportChatsButtonTapped() {
+        if isExportingChats {
+            confirmStopExport()
+        } else {
+            exportChats()
+        }
+    }
+
+    private func confirmStopExport() {
+        let alert = NSAlert()
+        alert.messageText = "Stop chat export?"
+        alert.informativeText = "An export is currently running. Do you want to stop it?"
+        alert.addButton(withTitle: "Stop")
+        alert.addButton(withTitle: "Continue")
+        alert.alertStyle = .warning
+        if alert.runModal() == .alertFirstButtonReturn {
+            stopSync()
+        }
+    }
+
+    private func exportChats() {
+        guard !isRunning && !isExportingChats else { return }
+        if !environmentReady() {
+            return
+        }
+        var isDir: ObjCBool = false
+        if !FileManager.default.fileExists(atPath: exportPath, isDirectory: &isDir) || !isDir.boolValue {
+            status = "Invalid vault path"
+            return
+        }
+
+        isExportingChats = true
+        userStoppedSync = false
+        status = "Exporting chats..."
+        progressCurrent = 0
+        progressTotal = 1
+        outputCarry = ""
+
+        let p = Process()
+        p.executableURL = URL(fileURLWithPath: "/bin/bash")
+        p.currentDirectoryURL = URL(fileURLWithPath: projectRoot)
+        p.arguments = [
+            exportScriptPath,
+            "--vault-root", exportPath
+        ]
+
+        let pipe = Pipe()
+        p.standardOutput = pipe
+        p.standardError = pipe
+
+        pipe.fileHandleForReading.readabilityHandler = { [weak self] handle in
+            guard let self else { return }
+            let data = handle.availableData
+            if data.isEmpty { return }
+            let text = String(decoding: data, as: UTF8.self)
+            self.handleOutputChunk(text)
+        }
+
+        p.terminationHandler = { [weak self] proc in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                pipe.fileHandleForReading.readabilityHandler = nil
+                self.process = nil
+                self.isExportingChats = false
+                if self.userStoppedSync {
+                    self.userStoppedSync = false
+                    self.status = "Chat export stopped"
+                } else {
+                    self.status = proc.terminationStatus == 0 ? "Chat export complete" : "Chat export failed (\(proc.terminationStatus))"
+                }
+            }
+        }
+
+        do {
+            try p.run()
+            process = p
+        } catch {
+            isExportingChats = false
+            status = "Failed to start export"
         }
     }
 }
@@ -395,6 +500,10 @@ struct MenuContentView: View {
                     .frame(maxWidth: .infinity)
                 Button(controller.isRunning ? "Stop" : "Sync") { controller.syncButtonTapped() }
                     .frame(maxWidth: .infinity)
+                    .disabled(controller.isExportingChats)
+                Button(controller.isExportingChats ? "Stop Export" : "Export Chats") { controller.exportChatsButtonTapped() }
+                    .frame(maxWidth: .infinity)
+                    .disabled(controller.isRunning)
                 Button("Quit") { controller.quitApp() }
                     .frame(maxWidth: .infinity)
             }

@@ -14,8 +14,10 @@ A minimal, one-click sync app from NotebookLM to Obsidian.
 ## What it does
 
 - Menu bar app with 4 buttons: `Login`, `Set Path`, `Sync`, `Quit`
+- Menu bar app with 5 buttons: `Login`, `Set Path`, `Sync`, `Export Chats`, `Quit`
 - Progress bar and status line
 - Markdown cleanup for better readability
+- One-click Antigravity chat export to markdown
 - Optional full overwrite strategy for changed notebooks
 
 ## Project structure
@@ -33,6 +35,12 @@ cd "/Users/david_chen/Desktop/MCP_Hub/Obsidian Transfer"
 ./scripts/setup_env.sh
 ./Obsidian_Transfer_venv/bin/nlm login
 ./run_sync.sh --include-source-content --sync-images --skip-unchanged-notebooks --overwrite-changed-notebook --max-source-chars 0 --clean-markdown
+```
+
+Export local Antigravity chats:
+
+```bash
+./scripts/export_antigravity_chats.py --vault-root "/Users/david_chen/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Memory"
 ```
 
 ## Launch app

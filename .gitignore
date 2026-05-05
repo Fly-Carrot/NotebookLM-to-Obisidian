@@ -12,7 +12,7 @@ Obsidian_Transfer_venv/
 # Local runtime artifacts
 logs/
 clean_app_preview.png
-NotebookLM-Obsidian-Sync-macOS.zip
+NotebookLM-Obsidian-Sync-macOS*.zip
 
 # Upstream/local archives
 notebooklm-mcp-cli/
