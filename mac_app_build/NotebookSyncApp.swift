@@ -223,6 +223,16 @@ final class SyncController: ObservableObject {
     }
 
     private func parseOutputLine(_ line: String) {
+        if line.hasPrefix("[STATUS]") {
+            let message = line.replacingOccurrences(of: "[STATUS]", with: "").trimmingCharacters(in: .whitespaces)
+            if !message.isEmpty {
+                DispatchQueue.main.async {
+                    self.status = message
+                }
+            }
+            return
+        }
+
         if line.hasPrefix("[PHASE] sync-start") {
             DispatchQueue.main.async {
                 self.status = "Syncing notebook data..."

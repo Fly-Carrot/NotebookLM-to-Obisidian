@@ -288,6 +288,8 @@ def export_conversations(
 
     for idx, conv_file in enumerate(conv_files, start=1):
         conv_id = conv_file.stem
+        print(f"[PROGRESS] {idx}/{len(conv_files)} {conv_id}")
+        print(f"[STATUS] Exporting conversation {conv_id}")
         md_sources = gather_md_sources(conv_id, antigravity_root=antigravity_root, gaf_root=gaf_root)
         if md_sources:
             stats.mirrored_readable += 1
@@ -306,9 +308,6 @@ def export_conversations(
 
         marker = "readable" if md_sources else "metadata-only"
         index_lines.append(f"- [{conv_id}]({out_name}) - {marker}")
-
-        if idx % 10 == 0 or idx == len(conv_files):
-            print(f"[PROGRESS] {idx}/{len(conv_files)}")
 
     write_text_if_changed(out_root / "INDEX.md", "\n".join(index_lines) + "\n", dry_run=dry_run)
 
