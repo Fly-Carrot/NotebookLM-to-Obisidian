@@ -21,6 +21,7 @@ A minimal, one-click sync app from NotebookLM to Obsidian.
 - Unified export layout under one parent folder:
   - `N2O Export/NotebookLM`
   - `N2O Export/Antigravity`
+- Antigravity export supports local protobuf conversations (`~/.gemini/antigravity/conversations/*.pb`)
 
 ## Project structure
 
@@ -51,6 +52,14 @@ Run full integrated pipeline manually (same behavior as app `Sync`):
 
 ```bash
 ./scripts/run_full_sync.sh --vault-root "/Users/david_chen/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Memory"
+```
+
+Custom Antigravity root (for other machines):
+
+```bash
+./scripts/export_antigravity_chats.py \
+  --antigravity-root "$HOME/.gemini/antigravity" \
+  --vault-root "/Users/david_chen/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Memory"
 ```
 
 ## Launch app
