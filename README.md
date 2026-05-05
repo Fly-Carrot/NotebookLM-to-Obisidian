@@ -10,6 +10,22 @@
 A minimal, one-click sync app from NotebookLM to Obsidian.
 ![NotebookLM-to-Obisidian App Preview](assets/app-preview.png)
 
+## Sync Architecture
+
+```mermaid
+flowchart TD
+    A["Menu Bar App<br/>Login / Set Path / Sync"] --> B["Full Sync Runner<br/>scripts/run_full_sync.sh"]
+    B --> C["NotebookLM Sync Engine<br/>scripts/sync_notebooklm_to_obsidian.py"]
+    B --> D["Antigravity Export Engine<br/>scripts/export_antigravity_chats.py"]
+    C --> E["N2O Export/NotebookLM"]
+    D --> F["N2O Export/Antigravity"]
+    E --> G["Obsidian Vault"]
+    F --> G
+    C --> H["Progress + Status Logs"]
+    D --> H
+    H --> A
+```
+
 
 ## What it does
 
