@@ -14,15 +14,16 @@ A minimal, one-click sync app from NotebookLM to Obsidian.
 ## What it does
 
 - Menu bar app with 4 buttons: `Login`, `Set Path`, `Sync`, `Quit`
-- Menu bar app with 5 buttons: `Login`, `Set Path`, `Sync`, `Export Chats`, `Quit`
 - Progress bar and status line
 - Markdown cleanup for better readability
-- One-click Antigravity chat export to markdown
+- `Sync` runs a full pipeline: NotebookLM sync + Antigravity chat export
 - Optional full overwrite strategy for changed notebooks
 
 ## Project structure
 
 - `scripts/sync_notebooklm_to_obsidian.py`: sync engine
+- `scripts/run_full_sync.sh`: full pipeline runner (sync + chat export)
+- `scripts/export_antigravity_chats.py`: Antigravity chat export engine
 - `run_sync.sh`: CLI runner
 - `mac_app_build/NotebookSyncApp.swift`: menu bar app source
 - `Launchers/NotebookLM Obsidian Sync.app`: macOS app bundle
