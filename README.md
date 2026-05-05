@@ -18,6 +18,9 @@ A minimal, one-click sync app from NotebookLM to Obsidian.
 - Markdown cleanup for better readability
 - `Sync` runs a full pipeline: NotebookLM sync + Antigravity chat export
 - Optional full overwrite strategy for changed notebooks
+- Unified export layout under one parent folder:
+  - `Knowledge Export/NotebookLM`
+  - `Knowledge Export/Antigravity`
 
 ## Project structure
 
@@ -42,6 +45,12 @@ Export local Antigravity chats:
 
 ```bash
 ./scripts/export_antigravity_chats.py --vault-root "/Users/david_chen/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Memory"
+```
+
+Run full integrated pipeline manually (same behavior as app `Sync`):
+
+```bash
+./scripts/run_full_sync.sh --vault-root "/Users/david_chen/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Memory"
 ```
 
 ## Launch app

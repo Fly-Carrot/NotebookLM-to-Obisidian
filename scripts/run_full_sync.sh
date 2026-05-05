@@ -8,6 +8,7 @@ PYTHON_BIN="${ROOT_DIR}/Obsidian_Transfer_venv/bin/python"
 
 VAULT_ROOT=""
 DRY_RUN=false
+BUNDLE_DIR="Knowledge Export"
 ARGS=()
 
 while [[ $# -gt 0 ]]; do
@@ -22,6 +23,10 @@ while [[ $# -gt 0 ]]; do
       ARGS+=("$1")
       shift
       ;;
+    --bundle-dir)
+      BUNDLE_DIR="$2"
+      shift 2
+      ;;
     *)
       ARGS+=("$1")
       shift
@@ -34,12 +39,17 @@ if [[ -z "${VAULT_ROOT}" ]]; then
   exit 1
 fi
 
+NOTEBOOKLM_OUT="${BUNDLE_DIR}/NotebookLM"
+ANTIGRAVITY_OUT="${BUNDLE_DIR}/Antigravity"
+
+echo "[INFO] Unified output root: ${VAULT_ROOT}/${BUNDLE_DIR}"
+
 echo "[PHASE] sync-start"
-"${SYNC_SCRIPT}" "${ARGS[@]}"
+"${SYNC_SCRIPT}" "${ARGS[@]}" --output-dir "${NOTEBOOKLM_OUT}"
 echo "[PHASE] sync-end"
 
 echo "[PHASE] export-start"
-EXPORT_ARGS=(--vault-root "${VAULT_ROOT}")
+EXPORT_ARGS=(--vault-root "${VAULT_ROOT}" --output-dir "${ANTIGRAVITY_OUT}")
 if [[ "${DRY_RUN}" == "true" ]]; then
   EXPORT_ARGS+=(--dry-run)
 fi
